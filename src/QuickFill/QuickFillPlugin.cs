@@ -16,7 +16,7 @@ namespace QuickFill
     {
         public const string ModGuid = "com.darkendvoid.quickfill";
         public const string ModName = "QuickFill";
-        public const string ModVersion = "0.2.0";
+        public const string ModVersion = "0.3.0";
 
         internal static ManualLogSource Log;
 

@@ -1,6 +1,6 @@
 # QuickFill
 
-A Valheim mod (BepInEx 5, HarmonyX, Jötunn): press F7 to fill nearby furnaces, blast furnaces, kilns, windmills, spinning wheels, fires, hearths, torches, sconces and braziers from your inventory. Range, hotkey, excluded items and each structure type are configurable through Configuration Manager.
+A Valheim mod (BepInEx 5, HarmonyX, Jötunn): press F7 to fill nearby furnaces, blast furnaces, kilns, windmills, spinning wheels, eitr refineries, hot tubs, fires, hearths, torches, sconces and braziers from your inventory and nearby chests. Hotkey, fill range, chest range, excluded items and each structure type are configurable through Configuration Manager.
 
 ## Setup (Linux)
 

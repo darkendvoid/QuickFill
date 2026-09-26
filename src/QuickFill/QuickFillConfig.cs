@@ -13,15 +13,21 @@ namespace QuickFill
         public static ConfigEntry<KeyboardShortcut> Hotkey;
         public static ConfigEntry<float> Range;
         public static ConfigEntry<string> ExcludedItems;
+        public static ConfigEntry<bool> UseChests;
+        public static ConfigEntry<float> ChestRange;
 
         private static readonly Dictionary<StructureCategory, ConfigEntry<bool>> s_enabled = new Dictionary<StructureCategory, ConfigEntry<bool>>();
 
         public static void Bind(ConfigFile config)
         {
             Hotkey = config.Bind(General, "Fill hotkey", new KeyboardShortcut(KeyCode.F7),
-                Describe("Key that fills every enabled structure in range.", order: 3));
+                Describe("Key that fills every enabled structure in range.", order: 6));
             Range = config.Bind(General, "Range (meters)", 25f,
-                Describe("How far from you structures are filled.", order: 2, range: new AcceptableValueRange<float>(1f, 100f)));
+                Describe("How far from you structures are filled. Only loaded areas count (roughly 100-150 m around you).", order: 5, range: new AcceptableValueRange<float>(1f, 250f)));
+            UseChests = config.Bind(General, "Take from chests", true,
+                Describe("Also take items from nearby player-built chests you can open (after your own inventory, nearest chest first). Chests someone has open are skipped.", order: 4));
+            ChestRange = config.Bind(General, "Chest range (meters)", 25f,
+                Describe("How far from you chests are used as a source.", order: 3, range: new AcceptableValueRange<float>(1f, 250f)));
             ExcludedItems = config.Bind(General, "Excluded items", "FineWood, RoundLog, OatSeeds",
                 Describe("Comma-separated item prefab names never used for filling (e.g. keep Fine wood and Core wood out of kilns, Oat seeds out of windmills).", order: 1));
 
@@ -31,12 +37,14 @@ namespace QuickFill
             BindCategory(config, StructureCategory.Kiln, "Kilns", "Charcoal kilns: wood.", true, order--);
             BindCategory(config, StructureCategory.Windmill, "Windmills", "Windmills: barley and oats.", true, order--);
             BindCategory(config, StructureCategory.SpinningWheel, "Spinning wheels", "Spinning wheels: flax.", true, order--);
+            BindCategory(config, StructureCategory.EitrRefinery, "Eitr refineries", "Eitr refineries: soft tissue and sap.", true, order--);
+            BindCategory(config, StructureCategory.HotTub, "Hot tubs", "Hot tubs: wood.", true, order--);
             BindCategory(config, StructureCategory.Fire, "Fires", "Campfires, iron fire pits and bonfires: wood.", true, order--);
             BindCategory(config, StructureCategory.Hearth, "Hearths", "Hearths: wood.", true, order--);
             BindCategory(config, StructureCategory.Torch, "Torches", "Standing torches: resin, guck or greydwarf eyes.", true, order--);
             BindCategory(config, StructureCategory.Sconce, "Sconces", "Wall sconces: resin.", true, order--);
             BindCategory(config, StructureCategory.Brazier, "Braziers", "Standing and hanging braziers: coal or greydwarf eyes.", true, order--);
-            BindCategory(config, StructureCategory.Other, "Other", "Everything else that takes fuel or input: eitr refinery, hot tub, frost kiln, jack-o-turnip, snow lantern and modded structures.", false, order--);
+            BindCategory(config, StructureCategory.Other, "Other", "Everything else that takes fuel or input: frost kiln, jack-o-turnip, snow lantern and modded structures.", false, order--);
         }
 
         public static bool IsEnabled(StructureCategory category) => s_enabled[category].Value;

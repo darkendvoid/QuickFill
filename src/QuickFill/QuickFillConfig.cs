@@ -39,12 +39,13 @@ namespace QuickFill
             BindCategory(config, StructureCategory.SpinningWheel, "Spinning wheels", "Spinning wheels: flax.", true, order--);
             BindCategory(config, StructureCategory.EitrRefinery, "Eitr refineries", "Eitr refineries: soft tissue and sap.", true, order--);
             BindCategory(config, StructureCategory.HotTub, "Hot tubs", "Hot tubs: wood.", true, order--);
+            BindCategory(config, StructureCategory.Oven, "Stone ovens", "Stone ovens: wood (fuel only, never food).", true, order--);
             BindCategory(config, StructureCategory.Fire, "Fires", "Campfires, iron fire pits and bonfires: wood.", true, order--);
             BindCategory(config, StructureCategory.Hearth, "Hearths", "Hearths: wood.", true, order--);
             BindCategory(config, StructureCategory.Torch, "Torches", "Standing torches: resin, guck or greydwarf eyes.", true, order--);
             BindCategory(config, StructureCategory.Sconce, "Sconces", "Wall sconces: resin.", true, order--);
             BindCategory(config, StructureCategory.Brazier, "Braziers", "Standing and hanging braziers: coal or greydwarf eyes.", true, order--);
-            BindCategory(config, StructureCategory.Other, "Other", "Everything else that takes fuel or input: frost kiln, jack-o-turnip, snow lantern and modded structures.", false, order--);
+            BindCategory(config, StructureCategory.Other, "Other", "Everything else that takes fuel or input: frost kiln, frost foundry, jack-o-turnip, snow lantern and modded structures.", false, order--);
         }
 
         public static bool IsEnabled(StructureCategory category) => s_enabled[category].Value;

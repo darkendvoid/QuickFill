@@ -5,7 +5,8 @@ using UnityEngine;
 namespace QuickFill
 {
     /// <summary>
-    /// Tops up nearby Smelter-type structures (furnaces, kilns, windmills, spinning wheels...) and Fireplaces
+    /// Tops up nearby Smelter-type structures (furnaces, kilns, windmills, spinning wheels...), Fireplaces and fuelled
+    /// CookingStations (stone oven)
     /// from the player's inventory and nearby chests, using the same RPCs the vanilla interact switches send.
     /// </summary>
     internal static class Filler
@@ -23,6 +24,7 @@ namespace QuickFill
 
             var fires = new List<Fireplace>();
             var smelters = new List<Smelter>();
+            var ovens = new List<CookingStation>();
             foreach (Piece piece in s_pieces.OrderBy(p => Vector3.Distance(origin, p.transform.position)))
             {
                 var category = StructureCategories.Classify(StructureCategories.PrefabName(piece.gameObject));
@@ -32,12 +34,17 @@ namespace QuickFill
                     fires.Add(fire);
                 else if (piece.TryGetComponent(out Smelter smelter))
                     smelters.Add(smelter);
+                else if (piece.TryGetComponent(out CookingStation oven) && oven.m_useFuel)
+                    ovens.Add(oven);
             }
 
-            // Fires and lights first: they need little, and share fuel (wood, coal) with kilns and furnaces.
+            // Fires, lights and ovens first: they need little, and share fuel (wood, coal) with kilns and furnaces.
             int filled = 0;
             foreach (Fireplace fire in fires)
                 if (FillFireplace(fire, supply, excluded) > 0)
+                    filled++;
+            foreach (CookingStation oven in ovens)
+                if (FillCookingStationFuel(oven, supply, excluded) > 0)
                     filled++;
             foreach (Smelter smelter in smelters)
                 if (FillSmelter(smelter, supply, excluded) > 0)
@@ -63,6 +70,20 @@ namespace QuickFill
             if (!nview.HasOwner())
                 nview.ClaimOwnership();
             nview.InvokeRPC("RPC_AddFuelAmount", (float)count);
+            return count;
+        }
+
+        private static int FillCookingStationFuel(CookingStation station, Supply supply, HashSet<string> excluded)
+        {
+            ZNetView nview = station.m_nview;
+            if (!station.m_fuelItem || !nview || !nview.IsValid() || excluded.Contains(station.m_fuelItem.name))
+                return 0;
+
+            // Like Smelter, the owner's RPC_AddFuel adds 1 per call without a capacity check.
+            int space = station.m_maxFuel - Mathf.CeilToInt(station.GetFuel());
+            int count = supply.Take(station.m_fuelItem, space, out _);
+            for (int i = 0; i < count; i++)
+                nview.InvokeRPC("RPC_AddFuel");
             return count;
         }
 

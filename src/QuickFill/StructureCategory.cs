@@ -11,6 +11,7 @@ namespace QuickFill
         SpinningWheel,
         EitrRefinery,
         HotTub,
+        Oven,
         Fire,
         Hearth,
         Torch,
@@ -21,7 +22,7 @@ namespace QuickFill
 
     internal static class StructureCategories
     {
-        // Vanilla prefab names, taken from a dump of every Smelter/Fireplace prefab in the game.
+        // Vanilla prefab names, taken from a dump of every Smelter/Fireplace/fuelled CookingStation prefab in the game.
         private static readonly Dictionary<string, StructureCategory> s_byPrefab = new Dictionary<string, StructureCategory>
         {
             ["smelter"] = StructureCategory.Furnace,
@@ -31,6 +32,7 @@ namespace QuickFill
             ["piece_spinningwheel"] = StructureCategory.SpinningWheel,
             ["eitrrefinery"] = StructureCategory.EitrRefinery,
             ["piece_bathtub"] = StructureCategory.HotTub,
+            ["piece_oven"] = StructureCategory.Oven,
             ["fire_pit"] = StructureCategory.Fire,
             ["fire_pit_iron"] = StructureCategory.Fire,
             ["bonfire"] = StructureCategory.Fire,
@@ -38,7 +40,7 @@ namespace QuickFill
             ["piece_walltorch"] = StructureCategory.Sconce,
         };
 
-        /// <summary>Anything with a Smelter or Fireplace that isn't listed (frost kiln, jack-o-turnip, modded pieces...) is Other.</summary>
+        /// <summary>Anything with a Smelter, Fireplace or fuelled CookingStation that isn't listed (frost kiln, jack-o-turnip, modded pieces...) is Other.</summary>
         public static StructureCategory Classify(string prefabName)
         {
             if (s_byPrefab.TryGetValue(prefabName, out var category))

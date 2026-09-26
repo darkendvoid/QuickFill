@@ -16,7 +16,7 @@ namespace QuickFill
     {
         public const string ModGuid = "com.darkendvoid.quickfill";
         public const string ModName = "QuickFill";
-        public const string ModVersion = "0.3.0";
+        public const string ModVersion = "0.4.0";
 
         internal static ManualLogSource Log;
 
@@ -47,6 +47,12 @@ namespace QuickFill
                 || Minimap.InTextInput();
         }
 
+        private static bool IsFillable(GameObject go)
+        {
+            var station = go.GetComponent<CookingStation>();
+            return go.GetComponent<Smelter>() || go.GetComponent<Fireplace>() || (station && station.m_useFuel);
+        }
+
         /// <summary>Logs how each fillable vanilla prefab is categorised, so new structures from game updates show up as Other.</summary>
         private void ReportRecognisedStructures()
         {
@@ -56,7 +62,7 @@ namespace QuickFill
             foreach (var obj in PrefabManager.Cache.GetPrefabs(typeof(GameObject)).Values)
             {
                 var go = (GameObject)obj;
-                if (!go.GetComponent<Piece>() || !(go.GetComponent<Smelter>() || go.GetComponent<Fireplace>()))
+                if (!go.GetComponent<Piece>() || !IsFillable(go))
                     continue;
                 var category = StructureCategories.Classify(go.name);
                 if (!counts.TryGetValue(category, out var names))

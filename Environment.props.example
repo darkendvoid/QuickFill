@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Machine-specific paths. Copy to Environment.props and adjust. Imported by Directory.Build.props. -->
+<Project>
+  <PropertyGroup>
+    <VALHEIM_INSTALL>$(HOME)/.local/share/Steam/steamapps/common/Valheim</VALHEIM_INSTALL>
+    <BEPINEX_PATH>$(VALHEIM_INSTALL)/BepInEx</BEPINEX_PATH>
+    <VALHEIM_MANAGED>$(VALHEIM_INSTALL)/valheim_Data/Managed</VALHEIM_MANAGED>
+    <!-- Amethyst mod folder; Amethyst symlinks its contents into BepInEx/plugins on deploy. -->
+    <MOD_DEPLOYPATH>$(HOME)/Games/Amethyst/Valheim/mods/AutoSmelt</MOD_DEPLOYPATH>
+  </PropertyGroup>
+</Project>

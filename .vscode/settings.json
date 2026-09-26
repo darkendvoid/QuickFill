@@ -1,0 +1,5 @@
+{
+  "dotnet.defaultSolution": "AutoSmelt.sln",
+  "files.exclude": { "**/bin": true, "**/obj": true },
+  "files.associations": { "*.props": "xml" }
+}

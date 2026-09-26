@@ -1,0 +1,20 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "type": "process",
+      "command": "dotnet",
+      "args": ["build", "${workspaceFolder}/src/AutoSmelt/AutoSmelt.csproj", "-nologo", "-v", "minimal"],
+      "problemMatcher": "$msCompile",
+      "group": { "kind": "build", "isDefault": true }
+    },
+    { "label": "deploy (build + Amethyst deploy)", "type": "shell", "command": "${workspaceFolder}/scripts/deploy.sh", "problemMatcher": "$msCompile" },
+    { "label": "launch Valheim", "type": "shell", "command": "${workspaceFolder}/scripts/launch.sh", "problemMatcher": [] },
+    { "label": "stop Valheim", "type": "shell", "command": "${workspaceFolder}/scripts/stop.sh", "problemMatcher": [] },
+    { "label": "smoke test", "type": "shell", "command": "${workspaceFolder}/scripts/smoketest.sh", "problemMatcher": [] },
+    { "label": "log: follow", "type": "shell", "command": "${workspaceFolder}/scripts/log.sh all", "isBackground": true, "problemMatcher": [] },
+    { "label": "log: AutoSmelt only", "type": "shell", "command": "${workspaceFolder}/scripts/log.sh mod", "isBackground": true, "problemMatcher": [] },
+    { "label": "log: errors", "type": "shell", "command": "${workspaceFolder}/scripts/log.sh errors", "problemMatcher": [] }
+  ]
+}

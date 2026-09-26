@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+    <AssemblyName>AutoSmelt</AssemblyName>
+    <RootNamespace>AutoSmelt</RootNamespace>
+    <Version>0.1.0</Version>
+    <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>portable</DebugType>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <!-- Use the game's netstandard 2.1 (referenced below) instead of the net462 pack's 2.0 facade. -->
+    <ImplicitlyExpandNETStandardFacades>false</ImplicitlyExpandNETStandardFacades>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!-- Referenced from the live game install; never copied into the output. -->
+  <ItemGroup>
+    <!-- Unity/game assemblies target netstandard 2.1; the net462 reference pack only ships 2.0. -->
+    <Reference Include="netstandard" HintPath="$(VALHEIM_MANAGED)/netstandard.dll" Private="false" />
+    <Reference Include="BepInEx" HintPath="$(BEPINEX_PATH)/core/BepInEx.dll" Private="false" />
+    <Reference Include="0Harmony" HintPath="$(BEPINEX_PATH)/core/0Harmony.dll" Private="false" />
+    <Reference Include="Jotunn" HintPath="$(BEPINEX_PATH)/plugins/Jotunn/Jotunn.dll" Private="false" />
+    <Reference Include="assembly_valheim" HintPath="$(VALHEIM_MANAGED)/assembly_valheim.dll" Private="false" Publicize="true" />
+    <Reference Include="assembly_utils" HintPath="$(VALHEIM_MANAGED)/assembly_utils.dll" Private="false" />
+    <Reference Include="assembly_guiutils" HintPath="$(VALHEIM_MANAGED)/assembly_guiutils.dll" Private="false" />
+    <Reference Include="UnityEngine" HintPath="$(VALHEIM_MANAGED)/UnityEngine.dll" Private="false" />
+    <Reference Include="UnityEngine.CoreModule" HintPath="$(VALHEIM_MANAGED)/UnityEngine.CoreModule.dll" Private="false" />
+    <Reference Include="UnityEngine.PhysicsModule" HintPath="$(VALHEIM_MANAGED)/UnityEngine.PhysicsModule.dll" Private="false" />
+    <Reference Include="UnityEngine.InputLegacyModule" HintPath="$(VALHEIM_MANAGED)/UnityEngine.InputLegacyModule.dll" Private="false" />
+    <Reference Include="UnityEngine.UI" HintPath="$(VALHEIM_MANAGED)/UnityEngine.UI.dll" Private="false" />
+  </ItemGroup>
+
+  <!-- Copy the built plugin into the Amethyst mod folder (already symlinked into the game once deployed). -->
+  <Target Name="CopyToAmethyst" AfterTargets="Build" Condition="'$(MOD_DEPLOYPATH)' != ''">
+    <MakeDir Directories="$(MOD_DEPLOYPATH)" />
+    <Copy SourceFiles="$(TargetPath);$(TargetDir)$(TargetName).pdb" DestinationFolder="$(MOD_DEPLOYPATH)" />
+    <Message Importance="high" Text="AutoSmelt -> $(MOD_DEPLOYPATH)" />
+  </Target>
+
+</Project>

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using BepInEx.Configuration;
 using UnityEngine;
@@ -29,7 +28,7 @@ namespace QuickFill
             ChestRange = config.Bind(General, "Chest range (meters)", 25f,
                 Describe("How far from you chests are used as a source.", order: 3, range: new AcceptableValueRange<float>(1f, 250f)));
             ExcludedItems = config.Bind(General, "Excluded items", "FineWood, RoundLog, OatSeeds",
-                Describe("Comma-separated item prefab names never used for filling (e.g. keep Fine wood and Core wood out of kilns, Oat seeds out of windmills).", order: 1));
+                Describe("Comma-separated items never used for filling. Use the in-game name (\"Core wood\") or the prefab name (\"RoundLog\"); spaces and case are ignored. Defaults keep Fine wood (FineWood) and Core wood (RoundLog) out of kilns and Oat seeds (OatSeeds) out of windmills.", order: 1));
 
             int order = 100;
             BindCategory(config, StructureCategory.Furnace, "Furnaces", "Smelters: ore and coal.", true, order--);
@@ -50,17 +49,7 @@ namespace QuickFill
 
         public static bool IsEnabled(StructureCategory category) => s_enabled[category].Value;
 
-        public static HashSet<string> GetExcludedItems()
-        {
-            var set = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (string part in ExcludedItems.Value.Split(','))
-            {
-                string name = part.Trim();
-                if (name.Length > 0)
-                    set.Add(name);
-            }
-            return set;
-        }
+        public static ItemExclusions GetExcludedItems() => new ItemExclusions(ExcludedItems.Value);
 
         private static void BindCategory(ConfigFile config, StructureCategory category, string key, string description, bool defaultValue, int order)
         {

@@ -24,7 +24,7 @@ To install manually, download `QuickFill-<version>.zip` from [Releases](https://
   - QuickFill takes ownership of a chest before taking from it, so items are never duplicated or lost in multiplayer.
 - **Never overfills:** each structure gets exactly enough to fill it, and anything already full is left alone.
 - **Shares fuel sensibly:** fires, lights and ovens are filled before kilns and furnaces, so the kiln doesn't eat all your wood.
-- **Keeps valuable items safe:** an excluded-items list keeps Fine Wood and Core Wood out of kilns and Oat Seeds out of windmills by default, and you can add your own.
+- **Keeps valuable items safe:** an excluded-items list keeps Fine Wood and Core Wood out of kilns and Oat Seeds out of windmills by default. You can add your own using in-game names ("Core wood") or prefab names ("RoundLog").
 - **Respects wards:** structures inside wards you don't have access to are skipped.
 - **Clear feedback:** an on-screen summary shows what was used, e.g. "QuickFill: filled 11 structures (26 Wood, 2 Flax, 3 Barley), using 3 chests".
 - **Fully configurable in Configuration Manager:**

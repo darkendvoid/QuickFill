@@ -17,7 +17,7 @@ namespace QuickFill
         {
             Vector3 origin = player.transform.position;
             var supply = new Supply(player, QuickFillConfig.UseChests.Value, QuickFillConfig.ChestRange.Value);
-            HashSet<string> excluded = QuickFillConfig.GetExcludedItems();
+            ItemExclusions excluded = QuickFillConfig.GetExcludedItems();
 
             s_pieces.Clear();
             Piece.GetAllPiecesInRadius(origin, QuickFillConfig.Range.Value, s_pieces);
@@ -53,12 +53,12 @@ namespace QuickFill
             Report(player, filled, supply);
         }
 
-        private static int FillFireplace(Fireplace fire, Supply supply, HashSet<string> excluded)
+        private static int FillFireplace(Fireplace fire, Supply supply, ItemExclusions excluded)
         {
             ZNetView nview = fire.m_nview;
             if (fire.m_infiniteFuel || !fire.m_canRefill || !fire.m_fuelItem || !nview || !nview.IsValid())
                 return 0;
-            if (excluded.Contains(fire.m_fuelItem.name))
+            if (excluded.Contains(fire.m_fuelItem))
                 return 0;
 
             // Vanilla refuses to add once Ceil(fuel) reaches max; each item adds 1 fuel.
@@ -73,10 +73,10 @@ namespace QuickFill
             return count;
         }
 
-        private static int FillCookingStationFuel(CookingStation station, Supply supply, HashSet<string> excluded)
+        private static int FillCookingStationFuel(CookingStation station, Supply supply, ItemExclusions excluded)
         {
             ZNetView nview = station.m_nview;
-            if (!station.m_fuelItem || !nview || !nview.IsValid() || excluded.Contains(station.m_fuelItem.name))
+            if (!station.m_fuelItem || !nview || !nview.IsValid() || excluded.Contains(station.m_fuelItem))
                 return 0;
 
             // Like Smelter, the owner's RPC_AddFuel adds 1 per call without a capacity check.
@@ -87,7 +87,7 @@ namespace QuickFill
             return count;
         }
 
-        private static int FillSmelter(Smelter smelter, Supply supply, HashSet<string> excluded)
+        private static int FillSmelter(Smelter smelter, Supply supply, ItemExclusions excluded)
         {
             ZNetView nview = smelter.m_nview;
             if (!nview || !nview.IsValid())
@@ -105,7 +105,7 @@ namespace QuickFill
                 if (!conversion.m_from)
                     continue;
                 string prefab = conversion.m_from.name;
-                if (!tried.Add(prefab) || excluded.Contains(prefab))
+                if (!tried.Add(prefab) || excluded.Contains(conversion.m_from))
                     continue;
 
                 int count = supply.Take(conversion.m_from, oreSpace, out bool cheated);
@@ -115,7 +115,7 @@ namespace QuickFill
                 total += count;
             }
 
-            if (smelter.m_maxFuel > 0 && smelter.m_fuelItem && !excluded.Contains(smelter.m_fuelItem.name))
+            if (smelter.m_maxFuel > 0 && smelter.m_fuelItem && !excluded.Contains(smelter.m_fuelItem))
             {
                 int fuelSpace = smelter.m_maxFuel - Mathf.CeilToInt(smelter.GetFuel());
                 int count = supply.Take(smelter.m_fuelItem, fuelSpace, out _);

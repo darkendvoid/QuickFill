@@ -4,7 +4,7 @@
     <TargetFramework>net462</TargetFramework>
     <AssemblyName>QuickFill</AssemblyName>
     <RootNamespace>QuickFill</RootNamespace>
-    <Version>0.5.1</Version>
+    <Version>0.5.2</Version>
     <LangVersion>latest</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>portable</DebugType>

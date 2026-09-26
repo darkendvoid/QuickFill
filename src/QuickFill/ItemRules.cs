@@ -7,7 +7,7 @@ namespace QuickFill
     internal static class ItemRules
     {
         // Dev/unused items the game still lists as valid inputs; never fill with them.
-        private static readonly HashSet<string> s_unsupported = new HashSet<string> { "GoldOre", "Oat", "OatSeeds" };
+        private static readonly HashSet<string> s_unsupported = new HashSet<string> { "GoldOre" };
 
         // Furnace and blast furnace inputs by metal grade, highest first.
         private static readonly string[] s_gradeOrder =

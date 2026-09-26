@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.2
+- Oat and Oat seeds are supported again as windmill inputs. They are new Deep North items, not dev items. Gold ore stays blocked.
+- Add `OatSeeds` to Excluded items if you want to keep seeds for planting.
+
 ## 0.5.1
 - Oat is never used either; like Oat seeds, it is an unused dev item. Windmills now only take barley.
 

@@ -35,7 +35,7 @@ namespace QuickFill
             BindCategory(config, StructureCategory.Furnace, "Furnaces", "Smelters: ore/scrap (highest grade first) and coal.", true, order--);
             BindCategory(config, StructureCategory.BlastFurnace, "Blast furnaces", "Blast furnaces: ore/scrap (highest grade first) and coal.", true, order--);
             BindCategory(config, StructureCategory.Kiln, "Kilns", "Charcoal kilns: wood.", true, order--);
-            BindCategory(config, StructureCategory.Windmill, "Windmills", "Windmills: barley.", true, order--);
+            BindCategory(config, StructureCategory.Windmill, "Windmills", "Windmills: barley, oats and oat seeds.", true, order--);
             BindCategory(config, StructureCategory.SpinningWheel, "Spinning wheels", "Spinning wheels: flax.", true, order--);
             BindCategory(config, StructureCategory.EitrRefinery, "Eitr refineries", "Eitr refineries: soft tissue and sap.", true, order--);
             BindCategory(config, StructureCategory.HotTub, "Hot tubs", "Hot tubs: wood.", true, order--);

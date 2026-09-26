@@ -16,7 +16,7 @@ To install manually, download `QuickFill-<version>.zip` from [Releases](https://
 
 - **One-key filling:** press F7 (rebindable) to fill every enabled structure around you.
 - **Supported structures:**
-  - **Processing:** furnaces, blast furnaces, charcoal kilns, windmills, spinning wheels, eitr refineries.
+  - **Processing:** furnaces, blast furnaces, charcoal kilns, windmills (barley, oats and oat seeds), spinning wheels, eitr refineries.
   - **Fuel:** hot tubs, stone ovens (fuel only, never food).
   - **Fires and lights:** campfires, iron fire pits, bonfires, hearths, standing torches, sconces, braziers.
 - **Pulls from chests:** your own inventory is used first, then nearby player-built chests from nearest to farthest.
@@ -26,7 +26,7 @@ To install manually, download `QuickFill-<version>.zip` from [Releases](https://
 - **Tells you what's missing:** if a structure could take more fuel than you have, the message lists the shortfall, e.g. "Missing fuel: 12 Resin, 20 Coal".
 - **Never overfills:** each structure gets exactly enough to fill it, and anything already full is left alone.
 - **Shares fuel sensibly:** fires, lights and ovens are filled before kilns and furnaces, so the kiln doesn't eat all your wood.
-- **Keeps valuable items safe:** an excluded-items list keeps Fine Wood and Core Wood out of kilns by default, and you can add your own. Unused dev items (Gold ore, Oat, Oat seeds) are never used.
+- **Keeps valuable items safe:** an excluded-items list keeps Fine Wood and Core Wood out of kilns by default, and you can add your own (add `OatSeeds` to keep your seeds for planting). Gold ore, an unused dev item, is never used.
 - **Respects wards:** structures inside wards you don't have access to are skipped.
 - **Clear feedback:** an on-screen summary shows what was used, e.g. "QuickFill: filled 11 structures (26 Wood, 2 Flax, 3 Barley), using 3 chests".
 - **Fully configurable in Configuration Manager:**

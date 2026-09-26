@@ -32,10 +32,10 @@ namespace QuickFill
                 Describe("Comma-separated item prefab names never used for filling (e.g. FineWood and RoundLog keep Fine wood and Core wood out of kilns).", order: 1));
 
             int order = 100;
-            BindCategory(config, StructureCategory.Furnace, "Furnaces", "Smelters: ore and coal.", true, order--);
-            BindCategory(config, StructureCategory.BlastFurnace, "Blast furnaces", "Blast furnaces: ore/scrap and coal.", true, order--);
+            BindCategory(config, StructureCategory.Furnace, "Furnaces", "Smelters: ore/scrap (highest grade first) and coal.", true, order--);
+            BindCategory(config, StructureCategory.BlastFurnace, "Blast furnaces", "Blast furnaces: ore/scrap (highest grade first) and coal.", true, order--);
             BindCategory(config, StructureCategory.Kiln, "Kilns", "Charcoal kilns: wood.", true, order--);
-            BindCategory(config, StructureCategory.Windmill, "Windmills", "Windmills: barley and oats.", true, order--);
+            BindCategory(config, StructureCategory.Windmill, "Windmills", "Windmills: barley.", true, order--);
             BindCategory(config, StructureCategory.SpinningWheel, "Spinning wheels", "Spinning wheels: flax.", true, order--);
             BindCategory(config, StructureCategory.EitrRefinery, "Eitr refineries", "Eitr refineries: soft tissue and sap.", true, order--);
             BindCategory(config, StructureCategory.HotTub, "Hot tubs", "Hot tubs: wood.", true, order--);

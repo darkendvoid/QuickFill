@@ -1,0 +1,12 @@
+# Changelog
+
+## 0.5.0
+- Furnaces and blast furnaces load the highest-grade material first: Flametal, Black metal scrap, Silver, Iron, Bronze scrap, Copper, Tin.
+- The on-screen message lists missing fuel when a structure could take more than you have, e.g. "Missing fuel: 12 Resin, 20 Coal".
+- Unused dev items (Gold ore, Oat seeds) are never used. OatSeeds is removed from the default excluded items.
+
+## 0.4.0
+- First public release.
+- Press F7 to fill nearby furnaces, blast furnaces, kilns, windmills, spinning wheels, eitr refineries, hot tubs, stone ovens, fires, hearths, torches, sconces and braziers.
+- Items come from your inventory, then nearby chests.
+- Configurable hotkey, fill range and chest range (1–250 m), excluded items and per-structure toggles.

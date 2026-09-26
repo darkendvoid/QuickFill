@@ -104,7 +104,7 @@ namespace QuickFill
                 if (oreSpace <= 0)
                     break;
                 string prefab = conversion.m_from.name;
-                if (!tried.Add(prefab) || excluded.Contains(prefab) || ItemRules.IsUnsupported(prefab))
+                if (!tried.Add(prefab) || excluded.Contains(prefab))
                     continue;
 
                 int count = supply.Take(conversion.m_from, oreSpace, out bool cheated);

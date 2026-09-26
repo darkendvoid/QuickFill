@@ -6,12 +6,10 @@ namespace QuickFill
 {
     internal static class ItemRules
     {
-        // Dev/unused items the game still lists as valid inputs; never fill with them.
-        private static readonly HashSet<string> s_unsupported = new HashSet<string> { "GoldOre" };
-
-        // Furnace and blast furnace inputs by metal grade, highest first.
+        // Furnace and blast furnace inputs by metal grade, highest first. GoldOre is Petrified tissue (-> Bloodgold).
         private static readonly string[] s_gradeOrder =
         {
+            "GoldOre",
             "FlametalOreNew", "FlametalOre",
             "BlackMetalScrap",
             "SilverOre",
@@ -20,8 +18,6 @@ namespace QuickFill
             "CopperOre", "CopperScrap",
             "TinOre",
         };
-
-        public static bool IsUnsupported(string prefabName) => s_unsupported.Contains(prefabName);
 
         /// <summary>Conversions ordered highest grade first; unlisted inputs follow in the game's order (OrderBy is stable).</summary>
         public static IEnumerable<Smelter.ItemConversion> ByGrade(IEnumerable<Smelter.ItemConversion> conversions)

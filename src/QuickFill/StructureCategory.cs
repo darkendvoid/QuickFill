@@ -10,6 +10,7 @@ namespace QuickFill
         Windmill,
         SpinningWheel,
         EitrRefinery,
+        FrigidKiln,
         HotTub,
         Oven,
         Fire,
@@ -31,6 +32,7 @@ namespace QuickFill
             ["windmill"] = StructureCategory.Windmill,
             ["piece_spinningwheel"] = StructureCategory.SpinningWheel,
             ["eitrrefinery"] = StructureCategory.EitrRefinery,
+            ["piece_FrostKiln"] = StructureCategory.FrigidKiln,
             ["piece_bathtub"] = StructureCategory.HotTub,
             ["piece_oven"] = StructureCategory.Oven,
             ["fire_pit"] = StructureCategory.Fire,
@@ -40,7 +42,7 @@ namespace QuickFill
             ["piece_walltorch"] = StructureCategory.Sconce,
         };
 
-        /// <summary>Anything with a Smelter, Fireplace or fuelled CookingStation that isn't listed (frost kiln, jack-o-turnip, modded pieces...) is Other.</summary>
+        /// <summary>Anything with a Smelter, Fireplace or fuelled CookingStation that isn't listed (frost foundry, jack-o-turnip, modded pieces...) is Other.</summary>
         public static StructureCategory Classify(string prefabName)
         {
             if (s_byPrefab.TryGetValue(prefabName, out var category))

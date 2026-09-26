@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0
+- Frigid kilns are supported: QuickFill fills them with Ice, which they turn into Liquid Frost. There's a new "Frigid kilns" toggle, on by default.
+- Petrified tissue can be loaded into blast furnaces again and is loaded first, as the highest-grade material. 0.5.0 to 0.5.2 blocked it by mistake as "Gold ore", its internal item name.
+
 ## 0.5.2
 - Oat and Oat seeds are supported again as windmill inputs. They are new Deep North items, not dev items. Gold ore stays blocked.
 - Add `OatSeeds` to Excluded items if you want to keep seeds for planting.

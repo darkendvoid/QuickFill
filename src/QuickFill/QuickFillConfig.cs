@@ -28,8 +28,8 @@ namespace QuickFill
                 Describe("Also take items from nearby player-built chests you can open (after your own inventory, nearest chest first). Chests someone has open are skipped.", order: 4));
             ChestRange = config.Bind(General, "Chest range (meters)", 25f,
                 Describe("How far from you chests are used as a source.", order: 3, range: new AcceptableValueRange<float>(1f, 250f)));
-            ExcludedItems = config.Bind(General, "Excluded items", "FineWood, RoundLog, OatSeeds",
-                Describe("Comma-separated item prefab names never used for filling (e.g. keep Fine wood and Core wood out of kilns, Oat seeds out of windmills).", order: 1));
+            ExcludedItems = config.Bind(General, "Excluded items", "FineWood, RoundLog",
+                Describe("Comma-separated item prefab names never used for filling (e.g. FineWood and RoundLog keep Fine wood and Core wood out of kilns).", order: 1));
 
             int order = 100;
             BindCategory(config, StructureCategory.Furnace, "Furnaces", "Smelters: ore and coal.", true, order--);

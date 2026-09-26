@@ -40,20 +40,21 @@ namespace QuickFill
 
             // Fires, lights and ovens first: they need little, and share fuel (wood, coal) with kilns and furnaces.
             int filled = 0;
+            var missingFuel = new Dictionary<string, int>();
             foreach (Fireplace fire in fires)
-                if (FillFireplace(fire, supply, excluded) > 0)
+                if (FillFireplace(fire, supply, excluded, missingFuel) > 0)
                     filled++;
             foreach (CookingStation oven in ovens)
-                if (FillCookingStationFuel(oven, supply, excluded) > 0)
+                if (FillCookingStationFuel(oven, supply, excluded, missingFuel) > 0)
                     filled++;
             foreach (Smelter smelter in smelters)
-                if (FillSmelter(smelter, supply, excluded) > 0)
+                if (FillSmelter(smelter, supply, excluded, missingFuel) > 0)
                     filled++;
 
-            Report(player, filled, supply);
+            Report(player, filled, supply, missingFuel);
         }
 
-        private static int FillFireplace(Fireplace fire, Supply supply, HashSet<string> excluded)
+        private static int FillFireplace(Fireplace fire, Supply supply, HashSet<string> excluded, Dictionary<string, int> missingFuel)
         {
             ZNetView nview = fire.m_nview;
             if (fire.m_infiniteFuel || !fire.m_canRefill || !fire.m_fuelItem || !nview || !nview.IsValid())
@@ -63,7 +64,7 @@ namespace QuickFill
 
             // Vanilla refuses to add once Ceil(fuel) reaches max; each item adds 1 fuel.
             int space = Mathf.FloorToInt(fire.m_maxFuel) - Mathf.CeilToInt(nview.GetZDO().GetFloat(ZDOVars.s_fuel));
-            int count = supply.Take(fire.m_fuelItem, space, out _);
+            int count = TakeFuel(supply, fire.m_fuelItem, space, missingFuel);
             if (count == 0)
                 return 0;
 
@@ -73,7 +74,7 @@ namespace QuickFill
             return count;
         }
 
-        private static int FillCookingStationFuel(CookingStation station, Supply supply, HashSet<string> excluded)
+        private static int FillCookingStationFuel(CookingStation station, Supply supply, HashSet<string> excluded, Dictionary<string, int> missingFuel)
         {
             ZNetView nview = station.m_nview;
             if (!station.m_fuelItem || !nview || !nview.IsValid() || excluded.Contains(station.m_fuelItem.name))
@@ -81,13 +82,13 @@ namespace QuickFill
 
             // Like Smelter, the owner's RPC_AddFuel adds 1 per call without a capacity check.
             int space = station.m_maxFuel - Mathf.CeilToInt(station.GetFuel());
-            int count = supply.Take(station.m_fuelItem, space, out _);
+            int count = TakeFuel(supply, station.m_fuelItem, space, missingFuel);
             for (int i = 0; i < count; i++)
                 nview.InvokeRPC("RPC_AddFuel");
             return count;
         }
 
-        private static int FillSmelter(Smelter smelter, Supply supply, HashSet<string> excluded)
+        private static int FillSmelter(Smelter smelter, Supply supply, HashSet<string> excluded, Dictionary<string, int> missingFuel)
         {
             ZNetView nview = smelter.m_nview;
             if (!nview || !nview.IsValid())
@@ -98,14 +99,12 @@ namespace QuickFill
             // The owner's RPC_AddOre/RPC_AddFuel don't check capacity, so never send more than the free space.
             int oreSpace = smelter.m_maxOre - smelter.GetQueueSize();
             var tried = new HashSet<string>();
-            foreach (Smelter.ItemConversion conversion in smelter.m_conversion)
+            foreach (Smelter.ItemConversion conversion in ItemRules.ByGrade(smelter.m_conversion))
             {
                 if (oreSpace <= 0)
                     break;
-                if (!conversion.m_from)
-                    continue;
                 string prefab = conversion.m_from.name;
-                if (!tried.Add(prefab) || excluded.Contains(prefab))
+                if (!tried.Add(prefab) || excluded.Contains(prefab) || ItemRules.IsUnsupported(prefab))
                     continue;
 
                 int count = supply.Take(conversion.m_from, oreSpace, out bool cheated);
@@ -118,7 +117,7 @@ namespace QuickFill
             if (smelter.m_maxFuel > 0 && smelter.m_fuelItem && !excluded.Contains(smelter.m_fuelItem.name))
             {
                 int fuelSpace = smelter.m_maxFuel - Mathf.CeilToInt(smelter.GetFuel());
-                int count = supply.Take(smelter.m_fuelItem, fuelSpace, out _);
+                int count = TakeFuel(supply, smelter.m_fuelItem, fuelSpace, missingFuel);
                 for (int i = 0; i < count; i++)
                     nview.InvokeRPC("RPC_AddFuel");
                 total += count;
@@ -127,22 +126,43 @@ namespace QuickFill
             return total;
         }
 
-        private static void Report(Player player, int filled, Supply supply)
+        /// <summary>Takes fuel for one structure and records any shortfall.</summary>
+        private static int TakeFuel(Supply supply, ItemDrop fuel, int space, Dictionary<string, int> missingFuel)
+        {
+            if (space <= 0)
+                return 0;
+            int count = supply.Take(fuel, space, out _);
+            if (count < space)
+            {
+                string name = fuel.m_itemData.m_shared.m_name;
+                missingFuel[name] = (missingFuel.TryGetValue(name, out int previous) ? previous : 0) + space - count;
+            }
+            return count;
+        }
+
+        private static void Report(Player player, int filled, Supply supply, Dictionary<string, int> missingFuel)
         {
             string message;
             if (filled == 0)
             {
-                message = "QuickFill: nothing to fill nearby";
+                message = missingFuel.Count == 0 ? "QuickFill: nothing to fill nearby" : "QuickFill: nothing filled";
             }
             else
             {
-                string items = string.Join(", ", supply.Taken.Select(kv => $"{kv.Value} {Localization.instance.Localize(kv.Key)}"));
-                message = $"QuickFill: filled {filled} structure{(filled == 1 ? "" : "s")} ({items})";
+                message = $"QuickFill: filled {filled} structure{(filled == 1 ? "" : "s")} ({Describe(supply.Taken)})";
                 if (supply.ContainersUsed > 0)
                     message += $", using {supply.ContainersUsed} chest{(supply.ContainersUsed == 1 ? "" : "s")}";
             }
+            if (missingFuel.Count > 0)
+                message += $"\nMissing fuel: {Describe(missingFuel)}";
+
             player.Message(MessageHud.MessageType.Center, message);
-            QuickFillPlugin.Log.LogInfo(message);
+            QuickFillPlugin.Log.LogInfo(message.Replace("\n", " | "));
+        }
+
+        private static string Describe(Dictionary<string, int> items)
+        {
+            return string.Join(", ", items.Select(kv => $"{kv.Value} {Localization.instance.Localize(kv.Key)}"));
         }
     }
 }

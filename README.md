@@ -22,9 +22,11 @@ To install manually, download `QuickFill-<version>.zip` from [Releases](https://
 - **Pulls from chests:** your own inventory is used first, then nearby player-built chests from nearest to farthest.
   - Chests that someone else has open, private chests you don't own and chests inside wards you can't access are skipped.
   - QuickFill takes ownership of a chest before taking from it, so items are never duplicated or lost in multiplayer.
+- **Best ore first:** furnaces and blast furnaces load the highest-grade material first (Flametal, Black metal scrap, Silver, Iron, Bronze scrap, Copper, Tin).
+- **Tells you what's missing:** if a structure could take more fuel than you have, the message lists the shortfall, e.g. "Missing fuel: 12 Resin, 20 Coal".
 - **Never overfills:** each structure gets exactly enough to fill it, and anything already full is left alone.
 - **Shares fuel sensibly:** fires, lights and ovens are filled before kilns and furnaces, so the kiln doesn't eat all your wood.
-- **Keeps valuable items safe:** an excluded-items list keeps Fine Wood and Core Wood out of kilns and Oat Seeds out of windmills by default, and you can add your own.
+- **Keeps valuable items safe:** an excluded-items list keeps Fine Wood and Core Wood out of kilns by default, and you can add your own. Unused dev items (Gold ore, Oat seeds) are never used.
 - **Respects wards:** structures inside wards you don't have access to are skipped.
 - **Clear feedback:** an on-screen summary shows what was used, e.g. "QuickFill: filled 11 structures (26 Wood, 2 Flax, 3 Barley), using 3 chests".
 - **Fully configurable in Configuration Manager:**

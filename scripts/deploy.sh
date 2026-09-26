@@ -17,6 +17,10 @@ if (( BUILD )); then
   dotnet build "$PROJECT_ROOT/src/QuickFill/QuickFill.csproj" -c "$CONFIG" -nologo -v minimal
 fi
 
+# Keep the version Amethyst shows in sync with the build.
+version=$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' "$PROJECT_ROOT/src/QuickFill/QuickFill.csproj")
+[[ -f "$MOD_DIR/meta.ini" && -n "$version" ]] && sed -i "s/^version = .*/version = $version/" "$MOD_DIR/meta.ini"
+
 # Amethyst deploys from a cached file catalog; rescan so new/changed mod files are picked up.
 # Both steps fail if the Amethyst GUI is open (it holds the library lock).
 "$AMETHYST_APPIMAGE" python3 "$PROJECT_ROOT/scripts/amethyst-refresh.py" Valheim "$AMETHYST_PROFILE" 2>&1 | grep -v '^\[startup\]'

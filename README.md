@@ -68,5 +68,6 @@ The Amethyst GUI must be closed while scripts deploy, because it locks the mod l
 | `scripts/launch.sh` / `scripts/stop.sh` | Start or stop Valheim through Steam (Proton) |
 | `scripts/smoketest.sh [timeout] [--keep-running]` | Launch the game and check the log that QuickFill loaded and recognised the vanilla structures |
 | `scripts/log.sh [all\|mod\|errors\|plugins]` | Follow or filter `BepInEx/LogOutput.log` |
+| `scripts/nexus-upload.sh [--dry-run] [--no-build]` | Build a Release zip, upload it to Nexus as a new version of the main file and post its CHANGELOG.md section. Needs a Nexus API key in `NEXUSMODS_API_KEY` or `~/.config/nexusmods/api_key` |
 
 VS Code tasks for all of these are in `.vscode/tasks.json`.

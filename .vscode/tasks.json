@@ -15,6 +15,8 @@
     { "label": "smoke test", "type": "shell", "command": "${workspaceFolder}/scripts/smoketest.sh", "problemMatcher": [] },
     { "label": "log: follow", "type": "shell", "command": "${workspaceFolder}/scripts/log.sh all", "isBackground": true, "problemMatcher": [] },
     { "label": "log: QuickFill only", "type": "shell", "command": "${workspaceFolder}/scripts/log.sh mod", "isBackground": true, "problemMatcher": [] },
+    { "label": "Nexus: upload dry run", "type": "shell", "command": "${workspaceFolder}/scripts/nexus-upload.sh --dry-run", "problemMatcher": "$msCompile" },
+    { "label": "Nexus: upload release", "type": "shell", "command": "${workspaceFolder}/scripts/nexus-upload.sh", "problemMatcher": "$msCompile" },
     { "label": "log: errors", "type": "shell", "command": "${workspaceFolder}/scripts/log.sh errors", "problemMatcher": [] }
   ]
 }

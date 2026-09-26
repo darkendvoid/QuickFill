@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0
+- Frost foundries are supported: QuickFill fuels them with Liquid Frost, and never touches their casting slots. There's a new "Frost foundries" toggle, on by default.
+- Pair with frigid kilns (0.6.0), which turn Ice into Liquid Frost.
+
 ## 0.6.0
 - Frigid kilns are supported: QuickFill fills them with Ice, which they turn into Liquid Frost. There's a new "Frigid kilns" toggle, on by default.
 - Petrified tissue can be loaded into blast furnaces again and is loaded first, as the highest-grade material. 0.5.0 to 0.5.2 blocked it by mistake as "Gold ore", its internal item name.

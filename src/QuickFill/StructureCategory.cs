@@ -13,6 +13,7 @@ namespace QuickFill
         FrigidKiln,
         HotTub,
         Oven,
+        FrostFoundry,
         Fire,
         Hearth,
         Torch,
@@ -35,6 +36,7 @@ namespace QuickFill
             ["piece_FrostKiln"] = StructureCategory.FrigidKiln,
             ["piece_bathtub"] = StructureCategory.HotTub,
             ["piece_oven"] = StructureCategory.Oven,
+            ["piece_FrostFoundry"] = StructureCategory.FrostFoundry,
             ["fire_pit"] = StructureCategory.Fire,
             ["fire_pit_iron"] = StructureCategory.Fire,
             ["bonfire"] = StructureCategory.Fire,
@@ -42,7 +44,7 @@ namespace QuickFill
             ["piece_walltorch"] = StructureCategory.Sconce,
         };
 
-        /// <summary>Anything with a Smelter, Fireplace or fuelled CookingStation that isn't listed (frost foundry, jack-o-turnip, modded pieces...) is Other.</summary>
+        /// <summary>Anything with a Smelter, Fireplace or fuelled CookingStation that isn't listed (jack-o-turnip, snow lantern, modded pieces...) is Other.</summary>
         public static StructureCategory Classify(string prefabName)
         {
             if (s_byPrefab.TryGetValue(prefabName, out var category))

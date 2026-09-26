@@ -6,7 +6,7 @@ namespace QuickFill
 {
     /// <summary>
     /// Tops up nearby Smelter-type structures (furnaces, kilns, windmills, spinning wheels...), Fireplaces and fuelled
-    /// CookingStations (stone oven)
+    /// CookingStations (stone oven, frost foundry)
     /// from the player's inventory and nearby chests, using the same RPCs the vanilla interact switches send.
     /// </summary>
     internal static class Filler
@@ -24,7 +24,7 @@ namespace QuickFill
 
             var fires = new List<Fireplace>();
             var smelters = new List<Smelter>();
-            var ovens = new List<CookingStation>();
+            var cookingStations = new List<CookingStation>();
             foreach (Piece piece in s_pieces.OrderBy(p => Vector3.Distance(origin, p.transform.position)))
             {
                 var category = StructureCategories.Classify(StructureCategories.PrefabName(piece.gameObject));
@@ -34,18 +34,18 @@ namespace QuickFill
                     fires.Add(fire);
                 else if (piece.TryGetComponent(out Smelter smelter))
                     smelters.Add(smelter);
-                else if (piece.TryGetComponent(out CookingStation oven) && oven.m_useFuel)
-                    ovens.Add(oven);
+                else if (piece.TryGetComponent(out CookingStation station) && station.m_useFuel)
+                    cookingStations.Add(station);
             }
 
-            // Fires, lights and ovens first: they need little, and share fuel (wood, coal) with kilns and furnaces.
+            // Fires, lights, ovens and foundries first: they need little, and share fuel (wood, coal) with kilns and furnaces.
             int filled = 0;
             var missingFuel = new Dictionary<string, int>();
             foreach (Fireplace fire in fires)
                 if (FillFireplace(fire, supply, excluded, missingFuel) > 0)
                     filled++;
-            foreach (CookingStation oven in ovens)
-                if (FillCookingStationFuel(oven, supply, excluded, missingFuel) > 0)
+            foreach (CookingStation station in cookingStations)
+                if (FillCookingStationFuel(station, supply, excluded, missingFuel) > 0)
                     filled++;
             foreach (Smelter smelter in smelters)
                 if (FillSmelter(smelter, supply, excluded, missingFuel) > 0)

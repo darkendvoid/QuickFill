@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
-    <AssemblyName>AutoSmelt</AssemblyName>
-    <RootNamespace>AutoSmelt</RootNamespace>
-    <Version>0.1.0</Version>
+    <AssemblyName>QuickFill</AssemblyName>
+    <RootNamespace>QuickFill</RootNamespace>
+    <Version>0.2.0</Version>
     <LangVersion>latest</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>portable</DebugType>
@@ -40,7 +40,7 @@
   <Target Name="CopyToAmethyst" AfterTargets="Build" Condition="'$(MOD_DEPLOYPATH)' != ''">
     <MakeDir Directories="$(MOD_DEPLOYPATH)" />
     <Copy SourceFiles="$(TargetPath);$(TargetDir)$(TargetName).pdb" DestinationFolder="$(MOD_DEPLOYPATH)" />
-    <Message Importance="high" Text="AutoSmelt -> $(MOD_DEPLOYPATH)" />
+    <Message Importance="high" Text="QuickFill -> $(MOD_DEPLOYPATH)" />
   </Target>
 
 </Project>

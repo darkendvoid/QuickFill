@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Inspect the BepInEx log.
 #   log.sh            follow the whole log
-#   log.sh mod        follow only AutoSmelt lines
+#   log.sh mod        follow only QuickFill lines
 #   log.sh errors     print errors/exceptions from the current log (with context)
 #   log.sh plugins    print the plugin load summary
 set -euo pipefail

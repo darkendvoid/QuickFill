@@ -3,7 +3,7 @@
 set -euo pipefail
 source "$(dirname "$0")/env.sh"
 
-if pgrep -f -i 'valheim.exe' >/dev/null; then
+if pgrep -f '^[A-Z]:.*[v]alheim[.]exe' >/dev/null; then
   echo "Valheim is already running." >&2
   exit 1
 fi

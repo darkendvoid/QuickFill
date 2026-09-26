@@ -8,13 +8,13 @@ BUILD=1
 [[ "${1:-}" == "--no-build" ]] && { BUILD=0; shift; }
 CONFIG="${1:-Debug}"
 
-if pgrep -f -i 'valheim.exe' >/dev/null; then
+if pgrep -f '^[A-Z]:.*[v]alheim[.]exe' >/dev/null; then
   echo "Valheim is running; stop it first (scripts/stop.sh)." >&2
   exit 1
 fi
 
 if (( BUILD )); then
-  dotnet build "$PROJECT_ROOT/src/AutoSmelt/AutoSmelt.csproj" -c "$CONFIG" -nologo -v minimal
+  dotnet build "$PROJECT_ROOT/src/QuickFill/QuickFill.csproj" -c "$CONFIG" -nologo -v minimal
 fi
 
 # Amethyst deploys from a cached file catalog; rescan so new/changed mod files are picked up.

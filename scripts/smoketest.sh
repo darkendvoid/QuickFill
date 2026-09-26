@@ -8,9 +8,8 @@ TIMEOUT="${1:-240}"
 KEEP=0; [[ "${2:-}" == "--keep-running" ]] && KEEP=1
 
 markers=(
-  "$MOD_NAME [0-9.]+ loaded \(BepInEx OK\)"
-  "Jotunn OnVanillaPrefabsAvailable fired; smelter prefab found: True"
-  "Harmony postfix on FejdStartup.Start hit"
+  "$MOD_NAME [0-9.]+ loaded"
+  "Recognised structures: .*Furnace=\[smelter\]"
 )
 
 start=$(date +%s)

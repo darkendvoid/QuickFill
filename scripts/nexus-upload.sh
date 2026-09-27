@@ -96,7 +96,7 @@ echo "Upload session $upload_id created; sending data..."
 
 curl -sS --fail-with-body -X PUT "$presigned_url" --upload-file "$zip_path" \
   -H "Content-Disposition: attachment; filename=\"$zip_name\"" \
-  -H "Content-MD5: $md5_b64" >/dev/null
+  -H "Content-MD5: $md5_b64" -H 'Content-Type: application/octet-stream' >/dev/null
 
 api POST "/uploads/$upload_id/finalise" >/dev/null
 for _ in $(seq 60); do

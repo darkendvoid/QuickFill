@@ -22,6 +22,7 @@ To install manually, download `QuickFill-<version>.zip` from [Releases](https://
 - **Pulls from chests:** your own inventory is used first, then nearby player-built chests from nearest to farthest.
   - Chests that someone else has open, private chests you don't own and chests inside wards you can't access are skipped.
   - QuickFill takes ownership of a chest before taking from it, so items are never duplicated or lost in multiplayer.
+- **Even split:** inputs are shared between stations of the same type, e.g. 6 Silver across 3 furnaces is loaded 2/2/2, so they all work in parallel. If there isn't enough fuel to go round, ore goes where it can be smelted with the least fuel, even if that is a single furnace.
 - **Best ore first:** furnaces and blast furnaces load the highest-grade material first (Petrified tissue, Flametal, Black metal scrap, Silver, Iron, Bronze scrap, Copper, Tin).
 - **Tells you what's missing:** if a structure could take more fuel than you have, the message lists the shortfall, e.g. "Missing fuel: 12 Resin, 20 Coal".
 - **Never overfills:** each structure gets exactly enough to fill it, and anything already full is left alone.

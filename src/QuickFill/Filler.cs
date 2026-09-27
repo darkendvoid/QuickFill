@@ -47,9 +47,9 @@ namespace QuickFill
             foreach (CookingStation station in cookingStations)
                 if (FillCookingStationFuel(station, supply, excluded, missingFuel) > 0)
                     filled++;
-            foreach (Smelter smelter in smelters)
-                if (FillSmelter(smelter, supply, excluded, missingFuel) > 0)
-                    filled++;
+            // Identical smelters (all furnaces, all windmills...) share their inputs; nearest group first.
+            foreach (var group in smelters.GroupBy(s => StructureCategories.PrefabName(s.gameObject)))
+                filled += FillSmelters(group.ToList(), supply, excluded, missingFuel);
 
             Report(player, filled, supply, missingFuel);
         }
@@ -88,42 +88,63 @@ namespace QuickFill
             return count;
         }
 
-        private static int FillSmelter(Smelter smelter, Supply supply, HashSet<string> excluded, Dictionary<string, int> missingFuel)
+        /// <summary>Splits the inputs between the stations (see <see cref="SmelterPlan"/>) and returns how many were filled.</summary>
+        private static int FillSmelters(List<Smelter> smelters, Supply supply, HashSet<string> excluded, Dictionary<string, int> missingFuel)
         {
-            ZNetView nview = smelter.m_nview;
-            if (!nview || !nview.IsValid())
+            smelters = smelters.Where(s => s.m_nview && s.m_nview.IsValid()).ToList();
+            if (smelters.Count == 0)
                 return 0;
 
-            int total = 0;
+            // All stations in a group are the same prefab, so they share conversions and fuel.
+            Smelter first = smelters[0];
+            var inputs = new List<ItemDrop>();
+            var seen = new HashSet<string>();
+            foreach (Smelter.ItemConversion conversion in ItemRules.ByGrade(first.m_conversion))
+                if (seen.Add(conversion.m_from.name) && !excluded.Contains(conversion.m_from.name))
+                    inputs.Add(conversion.m_from);
 
-            // The owner's RPC_AddOre/RPC_AddFuel don't check capacity, so never send more than the free space.
-            int oreSpace = smelter.m_maxOre - smelter.GetQueueSize();
-            var tried = new HashSet<string>();
-            foreach (Smelter.ItemConversion conversion in ItemRules.ByGrade(smelter.m_conversion))
+            ItemDrop fuel = first.m_maxFuel > 0 && first.m_fuelItem && !excluded.Contains(first.m_fuelItem.name) ? first.m_fuelItem : null;
+            var states = smelters.Select(s => new StationState
             {
-                if (oreSpace <= 0)
-                    break;
-                string prefab = conversion.m_from.name;
-                if (!tried.Add(prefab) || excluded.Contains(prefab))
-                    continue;
+                // The owner's RPC_AddOre/RPC_AddFuel don't check capacity, so never send more than the free space.
+                Queued = s.GetQueueSize(),
+                OreSpace = s.m_maxOre - s.GetQueueSize(),
+                Fuel = fuel ? s.GetFuel() : 0f,
+                FuelSpace = fuel ? s.m_maxFuel - Mathf.CeilToInt(s.GetFuel()) : 0,
+                FuelPerProduct = fuel ? s.m_fuelPerProduct : 0,
+            }).ToList();
+            SmelterPlan.Plan(states, inputs.Select(supply.Count).ToList(), fuel ? supply.Count(fuel) : 0);
 
-                int count = supply.Take(conversion.m_from, oreSpace, out bool cheated);
-                for (int i = 0; i < count; i++)
-                    nview.InvokeRPC("RPC_AddOre", prefab, cheated);
-                oreSpace -= count;
-                total += count;
+            var added = new int[smelters.Count];
+            for (int i = 0; i < smelters.Count; i++)
+            {
+                ZNetView nview = smelters[i].m_nview;
+                foreach (var byInput in states[i].Units.GroupBy(u => u))
+                {
+                    ItemDrop input = inputs[byInput.Key];
+                    int count = supply.Take(input, byInput.Count(), out bool cheated);
+                    for (int n = 0; n < count; n++)
+                        nview.InvokeRPC("RPC_AddOre", input.name, cheated);
+                    added[i] += count;
+                }
             }
 
-            if (smelter.m_maxFuel > 0 && smelter.m_fuelItem && !excluded.Contains(smelter.m_fuelItem.name))
+            if (fuel)
             {
-                int fuelSpace = smelter.m_maxFuel - Mathf.CeilToInt(smelter.GetFuel());
-                int count = TakeFuel(supply, smelter.m_fuelItem, fuelSpace, missingFuel);
-                for (int i = 0; i < count; i++)
-                    nview.InvokeRPC("RPC_AddFuel");
-                total += count;
+                // Fuel for the planned ore first, then top every station up with whatever is left.
+                var fuelAdded = new int[smelters.Count];
+                for (int i = 0; i < smelters.Count; i++)
+                    fuelAdded[i] = supply.Take(fuel, states[i].PlannedFuel, out _);
+                for (int i = 0; i < smelters.Count; i++)
+                {
+                    fuelAdded[i] += TakeFuel(supply, fuel, states[i].FuelSpace - fuelAdded[i], missingFuel);
+                    for (int n = 0; n < fuelAdded[i]; n++)
+                        smelters[i].m_nview.InvokeRPC("RPC_AddFuel");
+                    added[i] += fuelAdded[i];
+                }
             }
 
-            return total;
+            return added.Count(n => n > 0);
         }
 
         /// <summary>Takes fuel for one structure and records any shortfall.</summary>

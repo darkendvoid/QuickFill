@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.0
+- Ore and other inputs are split evenly between stations of the same type instead of filling the nearest one first, e.g. 6 Silver across 3 furnaces is loaded 2/2/2. Applies to furnaces, blast furnaces, windmills, kilns, spinning wheels, eitr refineries and frigid kilns.
+- Furnaces, blast furnaces and eitr refineries get the fuel their ore needs first, then any fuel left over tops them up.
+- When there isn't enough fuel for an even split, ore goes where it can be smelted with the least fuel, even if that is a single furnace: stations that already have fuel are used first, and ore beyond what the fuel covers goes into fuelled stations, not cold ones.
+
 ## 0.7.0
 - Frost foundries are supported: QuickFill fuels them with Liquid Frost, and never touches their casting slots. There's a new "Frost foundries" toggle, on by default.
 - Pair with frigid kilns (0.6.0), which turn Ice into Liquid Frost.

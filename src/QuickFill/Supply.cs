@@ -59,6 +59,13 @@ namespace QuickFill
             return container.CheckAccess(playerId) && PrivateArea.CheckAccess(container.transform.position, 0f, flash: false);
         }
 
+        /// <summary>How many of an item are available across all sources.</summary>
+        public int Count(ItemDrop item)
+        {
+            string name = item.m_itemData.m_shared.m_name;
+            return _inventories.Sum(inventory => inventory.CountItems(name));
+        }
+
         /// <summary>Removes up to <paramref name="wanted"/> of an item across all sources and returns how many were taken.</summary>
         public int Take(ItemDrop item, int wanted, out bool cheated)
         {

@@ -6,7 +6,7 @@ namespace QuickFill
 {
     /// <summary>
     /// Tops up nearby Smelter-type structures (furnaces, kilns, windmills, spinning wheels...), Fireplaces and fuelled
-    /// CookingStations (stone oven, frost foundry) and ShieldGenerators
+    /// CookingStations (stone oven, frost foundry), ShieldGenerators and ballistas
     /// from the player's inventory and nearby chests, using the same RPCs the vanilla interact switches send.
     /// </summary>
     internal static class Filler
@@ -26,6 +26,7 @@ namespace QuickFill
             var smelters = new List<Smelter>();
             var cookingStations = new List<CookingStation>();
             var shields = new List<ShieldGenerator>();
+            var ballistas = new List<Turret>();
             foreach (Piece piece in s_pieces.OrderBy(p => Vector3.Distance(origin, p.transform.position)))
             {
                 var category = StructureCategories.Classify(StructureCategories.PrefabName(piece.gameObject));
@@ -39,6 +40,8 @@ namespace QuickFill
                     cookingStations.Add(station);
                 else if (piece.TryGetComponent(out ShieldGenerator shield))
                     shields.Add(shield);
+                else if (piece.TryGetComponent(out Turret ballista))
+                    ballistas.Add(ballista);
             }
 
             // Fires, lights, ovens and foundries first: they need little, and share fuel (wood, coal) with kilns and furnaces.
@@ -52,6 +55,9 @@ namespace QuickFill
                     filled++;
             foreach (ShieldGenerator shield in shields)
                 if (FillShieldGenerator(shield, supply, excluded, missingFuel) > 0)
+                    filled++;
+            foreach (Turret ballista in ballistas)
+                if (FillBallista(ballista, supply, excluded, missingFuel) > 0)
                     filled++;
             // Identical smelters (all furnaces, all windmills...) share their inputs; nearest group first.
             foreach (var group in smelters.GroupBy(s => StructureCategories.PrefabName(s.gameObject)))
@@ -119,6 +125,42 @@ namespace QuickFill
                 nview.ClaimOwnership();
             for (int i = 0; i < count; i++)
                 nview.InvokeRPC("RPC_AddFuel");
+            return count;
+        }
+
+        private static int FillBallista(Turret ballista, Supply supply, HashSet<string> excluded, Dictionary<string, int> missingFuel)
+        {
+            ZNetView nview = ballista.m_nview;
+            if (ballista.m_maxAmmo <= 0 || !nview || !nview.IsValid())
+                return 0;
+            int space = ballista.m_maxAmmo - ballista.GetAmmo();
+            if (space <= 0)
+                return 0;
+
+            // A ballista holds one bolt type. The owner's RPC_AddAmmo relabels everything loaded as the new type, so a
+            // loaded ballista is only ever topped up with what it has; an empty one gets the most damaging bolts on hand.
+            ItemDrop ammo;
+            if (ballista.GetAmmo() > 0)
+            {
+                ammo = ballista.m_allowedAmmo.Select(a => a.m_ammo).FirstOrDefault(a => a && a.name == ballista.GetAmmoType());
+                if (!ammo || excluded.Contains(ammo.name))
+                    return 0;
+            }
+            else
+            {
+                ammo = ItemRules.AmmoByDamage(ballista.m_allowedAmmo.Select(a => a.m_ammo))
+                    .FirstOrDefault(a => !excluded.Contains(a.name) && supply.Count(a) > 0);
+                // No bolts at all: say nothing, as the player may not be able to craft any yet.
+                if (!ammo)
+                    return 0;
+            }
+
+            // Like the shield generator, the owner's RPC adds 1 per call without a capacity check.
+            int count = TakeFuel(supply, ammo, space, missingFuel);
+            if (count > 0 && !nview.HasOwner())
+                nview.ClaimOwnership();
+            for (int i = 0; i < count; i++)
+                nview.InvokeRPC("RPC_AddAmmo", ammo.name);
             return count;
         }
 

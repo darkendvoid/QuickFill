@@ -15,6 +15,7 @@ namespace QuickFill
         Oven,
         FrostFoundry,
         ShieldGenerator,
+        Ballista,
         Fire,
         Hearth,
         Torch,
@@ -25,7 +26,7 @@ namespace QuickFill
 
     internal static class StructureCategories
     {
-        // Vanilla prefab names, taken from a dump of every Smelter/Fireplace/fuelled CookingStation/ShieldGenerator prefab in the game.
+        // Vanilla prefab names, taken from a dump of every Smelter/Fireplace/fuelled CookingStation/ShieldGenerator/Turret prefab in the game.
         private static readonly Dictionary<string, StructureCategory> s_byPrefab = new Dictionary<string, StructureCategory>
         {
             ["smelter"] = StructureCategory.Furnace,
@@ -39,6 +40,7 @@ namespace QuickFill
             ["piece_oven"] = StructureCategory.Oven,
             ["piece_FrostFoundry"] = StructureCategory.FrostFoundry,
             ["piece_shieldgenerator"] = StructureCategory.ShieldGenerator,
+            ["piece_turret"] = StructureCategory.Ballista,
             ["fire_pit"] = StructureCategory.Fire,
             ["fire_pit_iron"] = StructureCategory.Fire,
             ["bonfire"] = StructureCategory.Fire,
@@ -46,7 +48,7 @@ namespace QuickFill
             ["piece_walltorch"] = StructureCategory.Sconce,
         };
 
-        /// <summary>Anything with a Smelter, Fireplace, fuelled CookingStation or ShieldGenerator that isn't listed (jack-o-turnip, snow lantern, modded pieces...) is Other.</summary>
+        /// <summary>Anything with a Smelter, Fireplace, fuelled CookingStation, ShieldGenerator or Turret that isn't listed (jack-o-turnip, snow lantern, Fuling village ballistas, modded pieces...) is Other.</summary>
         public static StructureCategory Classify(string prefabName)
         {
             if (s_byPrefab.TryGetValue(prefabName, out var category))

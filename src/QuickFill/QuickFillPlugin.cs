@@ -16,7 +16,7 @@ namespace QuickFill
     {
         public const string ModGuid = "com.darkendvoid.quickfill";
         public const string ModName = "QuickFill";
-        public const string ModVersion = "0.9.0";
+        public const string ModVersion = "0.9.1";
 
         internal static ManualLogSource Log;
 
@@ -51,8 +51,10 @@ namespace QuickFill
         {
             var station = go.GetComponent<CookingStation>();
             var shield = go.GetComponent<ShieldGenerator>();
-            return go.GetComponent<Smelter>() || go.GetComponent<Fireplace>() || (station && station.m_useFuel) || (shield && shield.m_fuelItems.Count > 0);
+            return go.GetComponent<Smelter>() || go.GetComponent<Fireplace>() || (station && station.m_useFuel) || (shield && shield.m_fuelItems.Count > 0) || IsLoadable(go.GetComponent<Turret>());
         }
+
+        private static bool IsLoadable(Turret turret) => turret && turret.m_maxAmmo > 0 && turret.m_allowedAmmo.Count > 0;
 
         /// <summary>Logs how each fillable vanilla prefab is categorised, so new structures from game updates show up as Other.</summary>
         private void ReportRecognisedStructures()

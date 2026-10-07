@@ -29,6 +29,12 @@ namespace QuickFill
             return fuels.Where(f => f).OrderBy(f => Rank(s_shieldFuelOrder, f.name));
         }
 
+        /// <summary>Ballista ammo, most damage first (Bloodgold, Flametal, Black metal, Wood); ties keep the game's order.</summary>
+        public static IEnumerable<ItemDrop> AmmoByDamage(IEnumerable<ItemDrop> ammo)
+        {
+            return ammo.Where(a => a).OrderByDescending(a => a.m_itemData.m_shared.m_damages.GetTotalDamage());
+        }
+
         /// <summary>Conversions ordered highest grade first; unlisted inputs follow in the game's order (OrderBy is stable).</summary>
         public static IEnumerable<Smelter.ItemConversion> ByGrade(IEnumerable<Smelter.ItemConversion> conversions)
         {

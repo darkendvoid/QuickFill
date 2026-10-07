@@ -43,12 +43,13 @@ namespace QuickFill
             BindCategory(config, StructureCategory.Oven, "Stone ovens", "Stone ovens: wood (fuel only, never food).", true, order--);
             BindCategory(config, StructureCategory.FrostFoundry, "Frost foundries", "Frost foundries: liquid frost (fuel only, never casts).", true, order--);
             BindCategory(config, StructureCategory.ShieldGenerator, "Shield generators", "Shield generators: bone fragments first, then charred bone (still needed for Ashlands gear and ammo).", true, order--);
+            BindCategory(config, StructureCategory.Ballista, "Ballistas", "Ballistas: tops up the loaded bolt type; empty ones get the most damaging bolts you have.", true, order--);
             BindCategory(config, StructureCategory.Fire, "Fires", "Campfires, iron fire pits and bonfires: wood.", true, order--);
             BindCategory(config, StructureCategory.Hearth, "Hearths", "Hearths: wood.", true, order--);
             BindCategory(config, StructureCategory.Torch, "Torches", "Standing torches: resin, guck or greydwarf eyes.", true, order--);
             BindCategory(config, StructureCategory.Sconce, "Sconces", "Wall sconces: resin.", true, order--);
             BindCategory(config, StructureCategory.Brazier, "Braziers", "Standing and hanging braziers: coal or greydwarf eyes.", true, order--);
-            BindCategory(config, StructureCategory.Other, "Other", "Everything else that takes fuel or input: jack-o-turnip, snow lantern and modded structures.", false, order--);
+            BindCategory(config, StructureCategory.Other, "Other", "Everything else that takes fuel or input: jack-o-turnip, snow lantern, Fuling village ballistas and modded structures.", false, order--);
         }
 
         public static bool IsEnabled(StructureCategory category) => s_enabled[category].Value;

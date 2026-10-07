@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.1
+- Ballistas are supported, with a new "Ballistas" toggle, on by default. A ballista holds one bolt type at a time, so one that's loaded is topped up to 40 with the same bolts. An empty one is loaded with the most damaging bolts you have: Bloodgold, then Flametal, Black metal and Wood.
+- Add a bolt to Excluded items to keep it out of ballistas, e.g. `TurretBoltBloodgold`.
+
 ## 0.9.0
 - Shield generators are supported, with a new "Shield generators" toggle, on by default. QuickFill tops them up to 10 with Bone fragments first, and uses Charred bone only when you run out, since Flametal armour, Ashlands weapons and Charred arrows and bolts still need it. Add `CharredBone` to Excluded items to never use it.
 

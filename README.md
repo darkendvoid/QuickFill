@@ -18,6 +18,7 @@ To install manually, download `QuickFill-<version>.zip` from [Releases](https://
 - **Supported structures:**
   - **Processing:** furnaces, blast furnaces, charcoal kilns, windmills (barley, oats and oat seeds), spinning wheels, eitr refineries, frigid kilns (ice, which they turn into liquid frost).
   - **Fuel:** hot tubs, stone ovens (wood; fuel only, never food), frost foundries (liquid frost; fuel only, never casts), shield generators (bone fragments first, then charred bone).
+  - **Defence:** ballistas, which are topped up with the bolts they already hold; empty ones get your most damaging bolts (Bloodgold, Flametal, Black metal, Wood).
   - **Fires and lights:** campfires, iron fire pits, bonfires, hearths, standing torches, sconces, braziers.
 - **Pulls from chests:** your own inventory is used first, then nearby player-built chests from nearest to farthest.
   - Chests that someone else has open, private chests you don't own and chests inside wards you can't access are skipped.
@@ -38,7 +39,7 @@ To install manually, download `QuickFill-<version>.zip` from [Releases](https://
   - chest use on/off;
   - excluded items;
   - an on/off switch for each structure type;
-  - an "Other" category (jack-o-turnip, snow lantern, modded structures), off by default.
+  - an "Other" category (jack-o-turnip, snow lantern, Fuling village ballistas, modded structures), off by default.
 
 ## Requirements
 

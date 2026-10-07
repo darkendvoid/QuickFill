@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.9.0
+- Shield generators are supported, with a new "Shield generators" toggle, on by default. QuickFill tops them up to 10 with Bone fragments first, and uses Charred bone only when you run out, since Flametal armour, Ashlands weapons and Charred arrows and bolts still need it. Add `CharredBone` to Excluded items to never use it.
+
 ## 0.8.0
 - Ore and other inputs are split evenly between stations of the same type instead of filling the nearest one first, e.g. 6 Silver across 3 furnaces is loaded 2/2/2. Applies to furnaces, blast furnaces, windmills, kilns, spinning wheels, eitr refineries and frigid kilns.
 - Furnaces, blast furnaces and eitr refineries get the fuel their ore needs first, then any fuel left over tops them up.

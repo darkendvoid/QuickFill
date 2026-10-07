@@ -6,7 +6,7 @@ namespace QuickFill
 {
     /// <summary>
     /// Tops up nearby Smelter-type structures (furnaces, kilns, windmills, spinning wheels...), Fireplaces and fuelled
-    /// CookingStations (stone oven, frost foundry)
+    /// CookingStations (stone oven, frost foundry) and ShieldGenerators
     /// from the player's inventory and nearby chests, using the same RPCs the vanilla interact switches send.
     /// </summary>
     internal static class Filler
@@ -25,6 +25,7 @@ namespace QuickFill
             var fires = new List<Fireplace>();
             var smelters = new List<Smelter>();
             var cookingStations = new List<CookingStation>();
+            var shields = new List<ShieldGenerator>();
             foreach (Piece piece in s_pieces.OrderBy(p => Vector3.Distance(origin, p.transform.position)))
             {
                 var category = StructureCategories.Classify(StructureCategories.PrefabName(piece.gameObject));
@@ -36,6 +37,8 @@ namespace QuickFill
                     smelters.Add(smelter);
                 else if (piece.TryGetComponent(out CookingStation station) && station.m_useFuel)
                     cookingStations.Add(station);
+                else if (piece.TryGetComponent(out ShieldGenerator shield))
+                    shields.Add(shield);
             }
 
             // Fires, lights, ovens and foundries first: they need little, and share fuel (wood, coal) with kilns and furnaces.
@@ -46,6 +49,9 @@ namespace QuickFill
                     filled++;
             foreach (CookingStation station in cookingStations)
                 if (FillCookingStationFuel(station, supply, excluded, missingFuel) > 0)
+                    filled++;
+            foreach (ShieldGenerator shield in shields)
+                if (FillShieldGenerator(shield, supply, excluded, missingFuel) > 0)
                     filled++;
             // Identical smelters (all furnaces, all windmills...) share their inputs; nearest group first.
             foreach (var group in smelters.GroupBy(s => StructureCategories.PrefabName(s.gameObject)))
@@ -83,6 +89,34 @@ namespace QuickFill
             // Like Smelter, the owner's RPC_AddFuel adds 1 per call without a capacity check.
             int space = station.m_maxFuel - Mathf.CeilToInt(station.GetFuel());
             int count = TakeFuel(supply, station.m_fuelItem, space, missingFuel);
+            for (int i = 0; i < count; i++)
+                nview.InvokeRPC("RPC_AddFuel");
+            return count;
+        }
+
+        private static int FillShieldGenerator(ShieldGenerator shield, Supply supply, HashSet<string> excluded, Dictionary<string, int> missingFuel)
+        {
+            ZNetView nview = shield.m_nview;
+            if (!nview || !nview.IsValid())
+                return 0;
+            List<ItemDrop> fuels = ItemRules.ShieldFuelsByPriority(shield.m_fuelItems).Where(f => !excluded.Contains(f.name)).ToList();
+            if (fuels.Count == 0)
+                return 0;
+
+            // Vanilla refuses once fuel > max - 1; the owner's RPC_AddFuel adds 1 per call without a capacity check.
+            int space = shield.m_maxFuel - Mathf.CeilToInt(shield.GetFuel());
+            int count = 0;
+            foreach (ItemDrop fuel in fuels)
+                count += supply.Take(fuel, space - count, out _);
+            if (count < space)
+            {
+                // Reported as the preferred fuel (Bone fragments).
+                string name = fuels[0].m_itemData.m_shared.m_name;
+                missingFuel[name] = (missingFuel.TryGetValue(name, out int previous) ? previous : 0) + space - count;
+            }
+
+            if (count > 0 && !nview.HasOwner())
+                nview.ClaimOwnership();
             for (int i = 0; i < count; i++)
                 nview.InvokeRPC("RPC_AddFuel");
             return count;

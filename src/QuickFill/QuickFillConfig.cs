@@ -42,6 +42,7 @@ namespace QuickFill
             BindCategory(config, StructureCategory.HotTub, "Hot tubs", "Hot tubs: wood.", true, order--);
             BindCategory(config, StructureCategory.Oven, "Stone ovens", "Stone ovens: wood (fuel only, never food).", true, order--);
             BindCategory(config, StructureCategory.FrostFoundry, "Frost foundries", "Frost foundries: liquid frost (fuel only, never casts).", true, order--);
+            BindCategory(config, StructureCategory.ShieldGenerator, "Shield generators", "Shield generators: bone fragments first, then charred bone (still needed for Ashlands gear and ammo).", true, order--);
             BindCategory(config, StructureCategory.Fire, "Fires", "Campfires, iron fire pits and bonfires: wood.", true, order--);
             BindCategory(config, StructureCategory.Hearth, "Hearths", "Hearths: wood.", true, order--);
             BindCategory(config, StructureCategory.Torch, "Torches", "Standing torches: resin, guck or greydwarf eyes.", true, order--);

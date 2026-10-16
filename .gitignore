@@ -3,4 +3,5 @@ obj/
 .vs/
 *.user
 Environment.props
+.vscode/tasks.json
 *.zip

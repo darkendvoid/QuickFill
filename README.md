@@ -53,24 +53,8 @@ To install manually, download `QuickFill-<version>.zip` from [Releases](https://
 
 Thanks to the BepInEx team for BepInEx and HarmonyX, to the Valheim Modding team for Jotunn, and to the Configuration Manager authors for making in-game settings easy.
 
-## Development
+## Building
 
-### Setup (Linux)
-
-1. Install the .NET SDK (`sudo apt install dotnet-sdk-10.0`). The plugin targets `net462`.
-2. Copy `Environment.props.example` to `Environment.props` and adjust the paths to your Valheim install and Amethyst mod folder.
-3. Register the mod with Amethyst Mod Manager once: `scripts/register-mod.sh`.
-
-### Dev loop
-
-The Amethyst GUI must be closed while scripts deploy, because it locks the mod library.
-
-| Script | Purpose |
-|---|---|
-| `scripts/deploy.sh [--no-build] [Debug\|Release]` | Build, rescan the Amethyst library, deploy |
-| `scripts/launch.sh` / `scripts/stop.sh` | Start or stop Valheim through Steam (Proton) |
-| `scripts/smoketest.sh [timeout] [--keep-running]` | Launch the game and check the log that QuickFill loaded and recognised the vanilla structures |
-| `scripts/log.sh [all\|mod\|errors\|plugins]` | Follow or filter `BepInEx/LogOutput.log` |
-| `scripts/nexus-upload.sh [--dry-run] [--no-build]` | Build a Release zip, upload it to Nexus as a new version of the main file and post its CHANGELOG.md section. Needs a Nexus API key in `NEXUSMODS_API_KEY` or `~/.config/nexusmods/api_key` |
-
-VS Code tasks for all of these are in `.vscode/tasks.json`.
+1. Install the .NET SDK. The plugin targets `net462`.
+2. Copy `Environment.props.example` to `Environment.props` and set `VALHEIM_INSTALL` to your Valheim folder, with BepInEx and Jötunn installed.
+3. Run `dotnet build src/QuickFill/QuickFill.csproj -c Release`. The plugin is written to `src/QuickFill/bin/Release/QuickFill.dll`.

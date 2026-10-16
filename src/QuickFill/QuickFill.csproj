@@ -36,8 +36,8 @@
     <Reference Include="UnityEngine.UI" HintPath="$(VALHEIM_MANAGED)/UnityEngine.UI.dll" Private="false" />
   </ItemGroup>
 
-  <!-- Copy the built plugin into the Amethyst mod folder (already symlinked into the game once deployed). -->
-  <Target Name="CopyToAmethyst" AfterTargets="Build" Condition="'$(MOD_DEPLOYPATH)' != ''">
+  <!-- Optional: copy the built plugin to MOD_DEPLOYPATH (set in Environment.props) after every build. -->
+  <Target Name="CopyToDeployPath" AfterTargets="Build" Condition="'$(MOD_DEPLOYPATH)' != ''">
     <MakeDir Directories="$(MOD_DEPLOYPATH)" />
     <Copy SourceFiles="$(TargetPath);$(TargetDir)$(TargetName).pdb" DestinationFolder="$(MOD_DEPLOYPATH)" />
     <Message Importance="high" Text="QuickFill -> $(MOD_DEPLOYPATH)" />

@@ -2,10 +2,10 @@
 <!-- Machine-specific paths. Copy to Environment.props and adjust. Imported by Directory.Build.props. -->
 <Project>
   <PropertyGroup>
-    <VALHEIM_INSTALL>$(HOME)/.local/share/Steam/steamapps/common/Valheim</VALHEIM_INSTALL>
+    <VALHEIM_INSTALL>/path/to/Valheim</VALHEIM_INSTALL>
     <BEPINEX_PATH>$(VALHEIM_INSTALL)/BepInEx</BEPINEX_PATH>
     <VALHEIM_MANAGED>$(VALHEIM_INSTALL)/valheim_Data/Managed</VALHEIM_MANAGED>
-    <!-- Amethyst mod folder; Amethyst symlinks its contents into BepInEx/plugins on deploy. -->
-    <MOD_DEPLOYPATH>$(HOME)/Games/Amethyst/Valheim/mods/QuickFill</MOD_DEPLOYPATH>
+    <!-- Optional: a folder the built plugin is copied to after every build. -->
+    <!-- <MOD_DEPLOYPATH>/path/to/Valheim/BepInEx/plugins/QuickFill</MOD_DEPLOYPATH> -->
   </PropertyGroup>
 </Project>
